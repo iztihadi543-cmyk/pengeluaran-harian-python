@@ -1,0 +1,13 @@
+# Cache Python
+__pycache__/
+*.py[cod]
+
+# Lingkungan virtual
+.venv/
+venv/
+
+# Pengaturan lokal VS Code
+.vscode/
+
+# File sementara
+*.tmp
