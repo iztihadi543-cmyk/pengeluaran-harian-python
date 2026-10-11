@@ -1,5 +1,6 @@
 # Modul untuk mengolah data pengeluaran
 
+
 # Class untuk menyimpan satu transaksi
 class Transaksi:
     def __init__(self, tanggal, kategori, keterangan, nominal):
@@ -9,28 +10,31 @@ class Transaksi:
         self.keterangan = keterangan
         self.nominal = nominal
 
-    # Menampilkan transaksi dalam bentuk teks
+    # Mengubah data transaksi menjadi teks
     def tampilkan(self):
         return (
             f"{self.tanggal} | {self.kategori} | "
             f"{self.keterangan} | Rp{self.nominal}"
         )
-# Class untuk mengelola kumpulan transaksi
+
+
+# Class untuk mengelola transaksi
 class PengelolaPengeluaran:
     def __init__(self):
-        # Menyiapkan daftar transaksi kosong
+        # Menyiapkan daftar transaksi
         self.transaksi = []
-    # Menambahkan satu atau beberapa transaksi menggunakan *args
+
+    # Menambahkan satu atau beberapa transaksi
     def tambah_transaksi(self, *args):
         for transaksi in args:
             self.transaksi.append(transaksi)
 
-    # Menampilkan daftar transaksi
+    # Menampilkan semua transaksi
     def tampilkan_semua(self):
         for transaksi in self.transaksi:
             print(transaksi.tampilkan())
 
-    # Menghitung total pengeluaran
+    # Menghitung seluruh pengeluaran
     def hitung_total(self):
         total = sum(
             transaksi.nominal for transaksi in self.transaksi
@@ -46,50 +50,36 @@ class PengelolaPengeluaran:
         )
         return total
 
-    # Membuat ringkasan menggunakan **kwargs
+    # Membuat ringkasan pengeluaran
     def buat_ringkasan(self, **kwargs):
-        total = self.hitung_total()
-
-        # Mengambil nama pemilik jika diberikan
-        pemilik = kwargs.get("pemilik", "Pengguna")
-
         return {
-            "pemilik": pemilik,
+            "pemilik": kwargs.get("pemilik", "Pengguna"),
             "jumlah_transaksi": len(self.transaksi),
-            "total_pengeluaran": total
+            "total_pengeluaran": self.hitung_total()
         }
-    
-# Fungsi untuk mengubah angka menjadi format rupiah
+
+# Mengubah nominal menjadi format rupiah
 def format_rupiah(nominal):
     return f"Rp{nominal:,}".replace(",", ".")
 
-# Pengujian lokal jika file dijalankan langsung
+# Pengujian sederhana jika file dijalankan langsung
 if __name__ == "__main__":
-    # Membuat beberapa objek transaksi
     transaksi1 = Transaksi(
         "11-10-2026", "Makanan", "Makan siang", 15000
     )
+
     transaksi2 = Transaksi(
         "11-10-2026", "Transportasi", "Ongkos", 10000
     )
 
-    # Membuat objek pengelola
     pengelola = PengelolaPengeluaran()
+    pengelola.tambah_transaksi(transaksi1, transaksi2)
 
-    # Memanggil fungsi dengan argumen kata kunci
-    pengelola.tambah_transaksi(
-        transaksi1,
-        transaksi2
-    )
-
-    # Contoh penggunaan lambda untuk mengurutkan nominal
+    # Lambda untuk mengurutkan transaksi berdasarkan nominal
     urutkan = lambda transaksi: transaksi.nominal
     pengelola.transaksi.sort(key=urutkan)
 
-    # Membuat ringkasan dengan keyword argument
-    ringkasan = pengelola.buat_ringkasan(pemilik="Iztihadi")
+    ringkasan = pengelola.buat_ringkasan(pemilik="Pengguna")
 
-    # Menampilkan hasil
     pengelola.tampilkan_semua()
     print("Total:", format_rupiah(ringkasan["total_pengeluaran"]))
-    print("Pemilik:", ringkasan["pemilik"])
