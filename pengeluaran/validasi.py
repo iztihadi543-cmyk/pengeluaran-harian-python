@@ -1,27 +1,48 @@
 # Modul untuk memeriksa data pengeluaran
-from datetime import datetime
+
 
 # Exception khusus untuk data yang salah
 class DataError(ValueError):
     pass
 
-# Memeriksa tanggal, kategori, keterangan, dan nominal
+
+# Memeriksa data transaksi sebelum disimpan
 def validasi_transaksi(tanggal, kategori, keterangan, nominal):
-    # Memeriksa format dan kebenaran tanggal
+    # Memeriksa format tanggal DD-MM-YYYY
+    if not isinstance(tanggal, str):
+        raise DataError("Tanggal harus berupa teks!")
+
+    bagian_tanggal = tanggal.split("-")
+
+    if len(bagian_tanggal) != 3:
+        raise DataError("Format tanggal harus DD-MM-YYYY!")
+
     try:
-        tanggal_valid = datetime.strptime(tanggal, "%d-%m-%Y")
-
-        if tanggal_valid.strftime("%d-%m-%Y") != tanggal:
-            raise DataError("Format tanggal harus DD-MM-YYYY!")
-
+        hari = int(bagian_tanggal[0])
+        bulan = int(bagian_tanggal[1])
+        tahun = int(bagian_tanggal[2])
     except ValueError:
-        raise DataError("Tanggal tidak valid!") from None
+        raise DataError("Tanggal harus menggunakan angka!") from None
 
-    # Memeriksa kategori dan keterangan agar tidak kosong
-    if not kategori.strip():
+    # Memeriksa batas tanggal dan bulan secara sederhana
+    if tahun < 1 or bulan < 1 or bulan > 12:
+        raise DataError("Tanggal tidak valid!")
+
+    jumlah_hari = [31, 29 if tahun % 4 == 0 else 28,
+                   31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    if hari < 1 or hari > jumlah_hari[bulan - 1]:
+        raise DataError("Tanggal tidak valid!")
+
+    # Memastikan format menggunakan dua digit hari dan bulan
+    if tanggal != f"{hari:02d}-{bulan:02d}-{tahun:04d}":
+        raise DataError("Format tanggal harus DD-MM-YYYY!")
+
+    # Memeriksa kategori dan keterangan
+    if not isinstance(kategori, str) or not kategori.strip():
         raise DataError("Kategori tidak boleh kosong!")
 
-    if not keterangan.strip():
+    if not isinstance(keterangan, str) or not keterangan.strip():
         raise DataError("Keterangan tidak boleh kosong!")
 
     # Memeriksa nominal harus berupa bilangan bulat
@@ -55,7 +76,6 @@ if __name__ == "__main__":
             "Makan siang",
             15000
         )
-
         print("Data valid:", data)
 
     except DataError as error:
