@@ -1,6 +1,5 @@
 # Modul untuk mengolah data pengeluaran
 
-
 # Class untuk menyimpan satu transaksi
 class Transaksi:
     def __init__(self, tanggal, kategori, keterangan, nominal):

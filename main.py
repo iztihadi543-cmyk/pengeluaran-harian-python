@@ -102,9 +102,18 @@ def menu_kategori():
 # Menyimpan laporan pengeluaran ke file
 def menu_laporan():
     data = baca_data()
-    pengelola = muat_pengeluaran()
-    total = pengelola.hitung_total()
+    pengelola = PengelolaPengeluaran()
 
+    for transaksi in data:
+        objek = Transaksi(
+            transaksi["tanggal"],
+            transaksi["kategori"],
+            transaksi["keterangan"],
+            transaksi["nominal"]
+        )
+        pengelola.tambah_transaksi(objek)
+
+    total = pengelola.hitung_total()
     simpan_laporan(data, total)
 
 

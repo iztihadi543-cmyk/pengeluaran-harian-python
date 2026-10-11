@@ -1,4 +1,3 @@
-
 # Modul untuk menguji program pengeluaran harian
 
 import unittest
@@ -86,7 +85,6 @@ class TestPengeluaran(unittest.TestCase):
                 "Makan siang",
                 -15000
             )
-
 
 # Menjalankan pengujian jika file dibuka langsung
 if __name__ == "__main__":
